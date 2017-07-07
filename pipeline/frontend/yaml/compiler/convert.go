@@ -24,10 +24,18 @@ func (c *Compiler) createProcess(name string, container *yaml.Container, section
 		// network    = container.Network
 	)
 
+	aliases := []string{container.Name}
+	for _, n := range container.Networks.Networks {
+		// currently limited to the default network
+		if fmt.Sprintf("%s_default", c.prefix) == n.Name {
+			aliases = append(aliases, n.Aliases...)
+		}
+	}
+
 	networks := []backend.Conn{
 		backend.Conn{
 			Name:    fmt.Sprintf("%s_default", c.prefix),
-			Aliases: []string{container.Name},
+			Aliases: aliases,
 		},
 	}
 	for _, network := range c.networks {
