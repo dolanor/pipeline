@@ -26,8 +26,8 @@ func (c *Compiler) createProcess(name string, container *yaml.Container, section
 
 	aliases := []string{container.Name}
 	for _, n := range container.Networks.Networks {
-		// currently limited to the default network
-		if fmt.Sprintf("%s_default", c.prefix) == n.Name {
+		// applies aliases only to the network named "default"
+		if n.Name == "default" {
 			aliases = append(aliases, n.Aliases...)
 		}
 	}
